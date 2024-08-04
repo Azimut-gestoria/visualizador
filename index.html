@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KMZ Viewer with Leaflet</title>
+    <title>KML Viewer with Leaflet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
@@ -24,7 +24,9 @@
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        omnivore.kmz('https://github.com/Azimut-gestoria/visualizador.github.io/blob/main/PLANCHASCATASTRALES_marzo2024.kmz').addTo(map);
+        var kmlUrl = 'https://azimut-gestoria.github.io/visualizador.github.io/PLANCHASCATASTRALES_marzo2024.kml'; // Cambia esto a tu archivo KML
+
+        omnivore.kml(kmlUrl).addTo(map);
     </script>
 </body>
 </html>
