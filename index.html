@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>KML Viewer with Leaflet</title>
+    <title>KMZ Viewer with Leaflet</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="https://unpkg.com/leaflet-omnivore@0.3.4/leaflet-omnivore.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.7.1/dist/jszip.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-kmz@0.0.3/dist/leaflet-kmz.min.js"></script>
     <style>
         #map {
             width: 100%;
@@ -24,9 +25,20 @@
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        var kmlUrl = 'https://azimut-gestoria.github.io/visualizador.github.io/PLANCHASCATASTRALES_marzo2024.kml'; // Cambia esto a tu archivo KML
+        var kmzUrl = 'https://azimut-gestoria.github.io/visualizador.github.io/PLANCHASCATASTRALES_marzo2024.kmz';
 
-        omnivore.kml(kmlUrl).addTo(map);
+        fetch(kmzUrl)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => {
+                var kmz = new JSZip(arrayBuffer);
+                kmz.file('doc.kml').async('string').then(function(kml) {
+                    var parser = new DOMParser();
+                    var kmlDoc = parser.parseFromString(kml, 'text/xml');
+                    var kmlLayer = new L.KML(kmlDoc);
+                    map.addLayer(kmlLayer);
+                });
+            })
+            .catch(error => console.error('Error loading KMZ:', error));
     </script>
 </body>
 </html>
